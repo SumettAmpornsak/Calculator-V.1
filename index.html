@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="description"
+      content="App Center ศูนย์รวมเว็บของ Sumett Ampornsak"
+    />
+    <meta
+      name="keywords"
+      content="HTML, CSS, JavaScript, AdminLTE, Bootstrap, Google Font, Animate.css, AOS, SweetAlert2"
+    />
+    <meta name="author" content="Sumett Ampornsak" />
+    <link rel="icon" href="https://i.ibb.co/RkmhBwWp/pngtree-beautiful-calculator-lin.jpg" type="image/x-icon" />
+    <link rel="apple-touch-icon" href="https://i.ibb.co/RkmhBwWp/pngtree-beautiful-calculator-lin.jpg" />
+    <title>เครื่องคิดเลขแบบมินิมอล</title>
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- AOS CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+
+    <!-- SweetAlert2 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Itim&family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Prompt:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Icon8 -->
+    <link
+      rel="stylesheet"
+      href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css"
+    />
+
+    <style>
+      :root {
+        --primary-color: #4da6ff;
+        --secondary-color: #e6f2ff;
+        --text-color: #333;
+        --bg-color: #f8f9fa;
+        --calculator-bg: #ffffff;
+        --button-bg: #f1f1f1;
+        --button-hover: #e0e0e0;
+        --display-bg: #f8f9fa;
+        --font-family: "Kanit", sans-serif;
+        --font-size: 16px;
+        --orientation: portrait;
+      }
+
+      .dark-theme {
+        --secondary-color: #2c3e50;
+        --text-color: #ecf0f1;
+        --bg-color: #1a1a1a;
+        --calculator-bg: #2d3748;
+        --button-bg: #4a5568;
+        --button-hover: #5a6578;
+        --display-bg: #1a202c;
+      }
+
+      body {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        font-family: var(--font-family);
+        font-size: var(--font-size);
+        transition: all 0.3s ease;
+      }
+
+      .calculator-container {
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: var(--calculator-bg);
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+      }
+
+      .display {
+        background-color: var(--display-bg);
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 20px;
+        text-align: right;
+        font-size: 2rem;
+        min-height: 80px;
+        overflow: hidden;
+        word-wrap: break-word;
+      }
+
+      .btn-calc {
+        background-color: var(--button-bg);
+        border: none;
+        border-radius: 10px;
+        font-size: 1.2rem;
+        height: 60px;
+        transition: all 0.2s;
+        color: var(--text-color);
+      }
+
+      .btn-calc:hover {
+        background-color: var(--button-hover);
+        transform: translateY(-2px);
+      }
+
+      .btn-primary-calc {
+        background-color: var(--primary-color);
+        color: white;
+      }
+
+      .btn-primary-calc:hover {
+        background-color: var(--primary-color);
+        filter: brightness(90%);
+        color: white;
+      }
+
+      .settings-modal .modal-content {
+        background-color: var(--calculator-bg);
+        color: var(--text-color);
+      }
+
+      .settings-modal .modal-header {
+        border-bottom: 1px solid var(--button-bg);
+      }
+
+      .settings-modal .modal-footer {
+        border-top: 1px solid var(--button-bg);
+      }
+
+      .color-option {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        margin: 5px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid transparent;
+      }
+
+      .color-option.active {
+        border-color: var(--primary-color);
+      }
+
+      .orientation-landscape .calculator-container {
+        max-width: 600px;
+      }
+
+      .orientation-landscape .btn-calc {
+        height: 50px;
+        font-size: 1rem;
+      }
+
+      .font-kanit {
+        font-family: "Kanit", sans-serif;
+      }
+
+      .font-prompt {
+        font-family: "Prompt", sans-serif;
+      }
+
+      .font-Itim {
+        font-family: "Itim", sans-serif;
+      }
+
+      /* Animation for display */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .fade-in {
+        animation: fadeIn 0.3s ease;
+      }
+
+      .font-size-slider {
+        width: 100%;
+      }
+
+      .font-size-value {
+        display: inline-block;
+        width: 50px;
+        text-align: center;
+      }
+
+      .font-dropdown .dropdown-menu {
+        max-height: 200px;
+        overflow-y: auto;
+      }
+
+      .font-option-item {
+        padding: 8px 12px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+
+      .font-option-item:hover {
+        background-color: var(--button-bg);
+      }
+
+      .font-option-item.active {
+        background-color: var(--primary-color);
+        color: white;
+      }
+
+      .font-preview {
+        font-family: inherit;
+      }
+
+      .history-container {
+        max-height: 200px;
+        overflow-y: auto;
+        margin-top: 15px;
+        border-radius: 10px;
+        background-color: var(--display-bg);
+        padding: 10px;
+      }
+
+      .history-item {
+        padding: 8px 12px;
+        border-bottom: 1px solid var(--button-bg);
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+
+      .history-item:hover {
+        background-color: var(--button-hover);
+      }
+
+      .history-item:last-child {
+        border-bottom: none;
+      }
+
+      .history-expression {
+        font-size: 0.9rem;
+        color: var(--text-color);
+        opacity: 0.8;
+      }
+
+      .history-result {
+        font-weight: bold;
+        text-align: right;
+      }
+
+      .color-picker-container {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .color-preview {
+        width: 30px;
+        height: 30px;
+        border-radius: 5px;
+        border: 2px solid var(--button-bg);
+      }
+
+      .display-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+
+      .copy-btn {
+        background: transparent;
+        border: none;
+        color: var(--text-color);
+        opacity: 0.7;
+        transition: opacity 0.2s;
+        cursor: pointer;
+        padding: 5px;
+        border-radius: 5px;
+      }
+
+      .copy-btn:hover {
+        opacity: 1;
+        background-color: var(--button-bg);
+      }
+
+      .theme-toggle-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 15px;
+      }
+
+      .theme-toggle-label {
+        margin: 0;
+      }
+
+      /* Custom toggle switch */
+      .theme-toggle {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+      }
+
+      .theme-toggle input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      .theme-slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: 0.4s;
+        border-radius: 34px;
+      }
+
+      .theme-slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: 0.4s;
+        border-radius: 50%;
+      }
+
+      input:checked + .theme-slider {
+        background-color: var(--primary-color);
+      }
+
+      input:checked + .theme-slider:before {
+        transform: translateX(26px);
+      }
+      
+    </style>
+  </head>
+  <body class="font-kanit">
+    <div class="container py-5">
+      <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+          <div class="calculator-container" data-aos="fade-up">
+            <p id="randomText" class="my-2 text-center"></p>
+            <!-- Display -->
+            <div class="display mb-3">
+              <div class="display-header">
+                <button class="copy-btn" id="copyResult" title="คัดลอกผลลัพธ์">
+                  <i class="las la-copy"></i>
+                </button>
+              </div>
+              <div id="display">0</div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="row g-2">
+              <div class="col-3">
+                <button class="btn btn-calc w-100" onclick="clearDisplay()">
+                  C
+                </button>
+              </div>
+              <div class="col-3">
+                <button class="btn btn-calc w-100" onclick="deleteLast()">
+                  <i class="las la-backspace"></i>
+                </button>
+              </div>
+              <div class="col-3">
+                <button
+                  class="btn btn-calc w-100"
+                  onclick="appendToDisplay('%')"
+                >
+                  %
+                </button>
+              </div>
+              <div class="col-3">
+                <button
+                  class="btn btn-calc w-100 btn-primary-calc"
+                  onclick="appendToDisplay('/')"
+                >
+                  /
+                </button>
+              </div>
+
+              <div class="col-3">
+                <button
+                  class="btn btn-calc w-100"
+                  onclick="appendToDisplay('7')"
+                >
+                  7
+                </button>
+              </div>
+              <div class="col-3">
+                <button
+                  class="btn btn-calc w-100"
+                  onclick="appendToDisplay('8')"
+                >
+                  8
+                </button>
+              </div>
+              <div class="col-3">
+                <button
+                  class="btn btn-calc w-100"
+                  onclick="appendToDisplay('9')"
+                >
+                  9
+                </button>
+              </div>
+              <div class="col-3">
+                <button
+                  class="btn btn-calc w-100 btn-primary-calc"
+                  onclick="appendToDisplay('*')"
+                >
+                  ×
+                </button>
+              </div>
+
+              <div class="col-3">
+                <button
+                  class="btn btn-calc w-100"
+                  onclick="appendToDisplay('4')"
+                >
+                  4
+                </button>
+              </div>
+              <div class="col-3">
+                <button
+                  class="btn btn-calc w-100"
+                  onclick="appendToDisplay('5')"
+                >
+                  5
+                </button>
+              </div>
+              <div class="col-3">
+                <button
+                  class="btn btn-calc w-100"
+                  onclick="appendToDisplay('6')"
+                >
+                  6
+                </button>
+              </div>
+              <div class="col-3">
+                <button
+                  class="btn btn-calc w-100 btn-primary-calc"
+                  onclick="appendToDisplay('-')"
+                >
+                  -
+                </button>
+              </div>
+
+              <div class="col-3">
+                <button
+                  class="btn btn-calc w-100"
+                  onclick="appendToDisplay('1')"
+                >
+                  1
+                </button>
+              </div>
+              <div class="col-3">
+                <button
+                  class="btn btn-calc w-100"
+                  onclick="appendToDisplay('2')"
+                >
+                  2
+                </button>
+              </div>
+              <div class="col-3">
+                <button
+                  class="btn btn-calc w-100"
+                  onclick="appendToDisplay('3')"
+                >
+                  3
+                </button>
+              </div>
+              <div class="col-3">
+                <button
+                  class="btn btn-calc w-100 btn-primary-calc"
+                  onclick="appendToDisplay('+')"
+                >
+                  +
+                </button>
+              </div>
+
+              <div class="col-6">
+                <button
+                  class="btn btn-calc w-100"
+                  onclick="appendToDisplay('0')"
+                >
+                  0
+                </button>
+              </div>
+              <div class="col-3">
+                <button
+                  class="btn btn-calc w-100"
+                  onclick="appendToDisplay('.')"
+                >
+                  .
+                </button>
+              </div>
+              <div class="col-3">
+                <button
+                  class="btn btn-calc w-100 btn-primary-calc"
+                  onclick="calculateResult()"
+                >
+                  =
+                </button>
+              </div>
+            </div>
+
+            <!-- History Section -->
+            <div class="history-container" id="historyContainer">
+              <div class="text-center text-muted" id="emptyHistory">
+                ไม่มีประวัติการคำนวณ
+              </div>
+            </div>
+
+            <!-- Settings Button -->
+            <div
+              class="text-center mt-4 d-flex justify-content-center flex-wrap gap-2"
+            >
+              <button
+                class="btn btn-primary-calc"
+                data-bs-toggle="modal"
+                data-bs-target="#settingsModal"
+              >
+                <i class="las la-cog"></i> การตั้งค่า
+              </button>
+
+              <!-- ปุ่มรีเฟรชหน้า -->
+              <button class="btn btn-outline-secondary" onclick="refreshPage()">
+                <i class="las la-sync-alt"></i> รีเฟรชหน้า
+              </button>
+
+              <!-- ปุ่มล้างค่าประวัติ -->
+              <button class="btn btn-outline-danger" onclick="clearHistory()">
+                <i class="las la-trash-alt"></i> ล้างประวัติ
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div
+      class="modal fade settings-modal"
+      id="settingsModal"
+      tabindex="-1"
+      aria-labelledby="settingsModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="settingsModalLabel">การตั้งค่า</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-4">
+              <label class="form-label"
+                >ขนาดตัวหนังสือ :
+                <span class="font-size-value">16</span>px</label
+              >
+              <input
+                type="range"
+                class="form-range font-size-slider"
+                min="12"
+                max="30"
+                value="16"
+                step="1"
+                id="fontSizeSlider"
+              />
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label">แบบอักษร</label>
+              <div class="dropdown font-dropdown">
+                <button
+                  class="btn btn-outline-secondary dropdown-toggle w-100 text-start"
+                  type="button"
+                  id="fontDropdown"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <span class="font-preview">Kanit</span>
+                </button>
+                <ul class="dropdown-menu w-100" aria-labelledby="fontDropdown">
+                  <li>
+                    <a
+                      class="dropdown-item font-option-item active"
+                      href="#"
+                      data-font="kanit"
+                    >
+                      <span class="font-kanit">Kanit - ตัวอย่างข้อความ</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      class="dropdown-item font-option-item"
+                      href="#"
+                      data-font="prompt"
+                    >
+                      <span class="font-prompt">Prompt - ตัวอย่างข้อความ</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      class="dropdown-item font-option-item"
+                      href="#"
+                      data-font="Itim"
+                    >
+                      <span class="font-Itim">Itim - ตัวอย่างข้อความ</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label">สีธีมหลัก</label>
+              <div class="color-picker-container">
+                <input
+                  type="color"
+                  id="colorPicker"
+                  value="#4da6ff"
+                  class="form-control form-control-color"
+                />
+                <div
+                  class="color-preview"
+                  id="colorPreview"
+                  style="background-color: #4da6ff"
+                ></div>
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label">การวางแนว</label>
+              <div>
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="orientation"
+                    id="portrait"
+                    value="portrait"
+                    checked
+                  />
+                  <label class="form-check-label" for="portrait">แนวตั้ง</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="orientation"
+                    id="landscape"
+                    value="landscape"
+                  />
+                  <label class="form-check-label" for="landscape">แนวนอน</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- เพิ่มปุ่มสวิตช์ธีมกลางวัน-กลางคืน -->
+          <div class="mb-4">
+            <div class="theme-toggle-container">
+              <span class="theme-toggle-label">กลางวัน</span>
+              <label class="theme-toggle">
+                <input type="checkbox" id="theme-toggle" />
+                <span class="theme-slider"></span>
+              </label>
+              <span class="theme-toggle-label">กลางคืน</span>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              ปิด
+            </button>
+            <button type="button" class="btn btn-primary" id="saveSettings">
+              บันทึกการตั้งค่า
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- AOS JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      // Initialize AOS
+      AOS.init();
+      
+
+      // Calculator functionality
+      let display = document.getElementById("display");
+      let currentInput = "0";
+      let operator = null;
+      let previousInput = "";
+      let selectedFont = "kanit";
+      let calculationHistory = [];
+      let currentExpression = "";
+
+      function updateDisplay() {
+        display.textContent = currentInput;
+        display.classList.add("fade-in");
+        setTimeout(() => {
+          display.classList.remove("fade-in");
+        }, 300);
+      }
+
+      function appendToDisplay(value) {
+        if (currentInput === "0" || currentInput === "Error") {
+          currentInput = value;
+        } else {
+          currentInput += value;
+        }
+        updateDisplay();
+      }
+
+      function clearDisplay() {
+        currentInput = "0";
+        operator = null;
+        previousInput = "";
+        currentExpression = "";
+        updateDisplay();
+      }
+
+      function deleteLast() {
+        if (currentInput.length > 1) {
+          currentInput = currentInput.slice(0, -1);
+        } else {
+          currentInput = "0";
+        }
+        updateDisplay();
+      }
+       $(document).ready(function () {
+      const originalText = "เครื่องคิดเลขแบบมินิมอล By Sumett Ampornsak";
+
+      function typeText(text) {
+        let index = 0;
+        const speed = 50;
+        const interval = setInterval(() => {
+          if (index < text.length) {
+            $('#randomText').text(text.substring(0, index + 1));
+            index++;
+          } else {
+            clearInterval(interval);
+            setTimeout(() => randomTyping(), 2000);
+          }
+        }, speed);
+      }
+
+      function randomTyping() {
+        const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        let randomText = "...";
+        let randomIndex = 0;
+        const typingSpeed = 100;
+        const interval = setInterval(() => {
+          if (randomIndex < 20) {
+            randomText += characters.charAt(Math.floor(Math.random() * characters.length));
+            $('#randomText').text(randomText);
+            randomIndex++;
+          } else {
+            clearInterval(interval);
+            setTimeout(() => typeText(originalText), 0);
+          }
+        }, typingSpeed);
+      }
+
+      typeText(originalText);
+    });
+
+      function calculateResult() {
+        try {
+          // Store the expression before calculation
+          currentExpression = currentInput;
+
+          // Replace × with * for evaluation
+          let expression = currentInput.replace(/×/g, "*");
+
+          // Evaluate the expression
+          let result = eval(expression);
+
+          // Check if result is a finite number
+          if (isFinite(result)) {
+            currentInput = result.toString();
+
+            // Add to history
+            addToHistory(currentExpression, currentInput);
+          } else {
+            currentInput = "Error";
+            Swal.fire({
+              icon: "error",
+              title: "เกิดข้อผิดพลาด",
+              text: "ไม่สามารถคำนวณได้",
+              confirmButtonColor: "var(--primary-color)",
+            });
+          }
+        } catch (error) {
+          currentInput = "Error";
+          Swal.fire({
+            icon: "error",
+            title: "เกิดข้อผิดพลาด",
+            text: "นิพจน์ไม่ถูกต้อง",
+            confirmButtonColor: "var(--primary-color)",
+          });
+        }
+        updateDisplay();
+      }
+
+      // History functionality
+      function addToHistory(expression, result) {
+        // Add to beginning of array
+        calculationHistory.unshift({
+          expression: expression,
+          result: result,
+          timestamp: new Date(),
+        });
+
+        // Keep only last 10 items
+        if (calculationHistory.length > 10) {
+          calculationHistory = calculationHistory.slice(0, 10);
+        }
+
+        updateHistoryDisplay();
+      }
+
+      // ฟังก์ชันรีเฟรชหน้า
+      function refreshPage() {
+        Swal.fire({
+          title: "ต้องการรีเฟรชหน้าหรือไม่?",
+          text: "การตั้งค่าที่ยังไม่บันทึกอาจสูญหาย",
+          icon: "question",
+          showCancelButton: true,
+          confirmButtonText: "รีเฟรชเลย",
+          cancelButtonText: "ยกเลิก",
+          confirmButtonColor: "var(--primary-color)",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            location.reload();
+          }
+        });
+      }
+
+      // ฟังก์ชันล้างประวัติการคำนวณ
+      function clearHistory() {
+        if (calculationHistory.length === 0) {
+          Swal.fire({
+            icon: "info",
+            title: "ไม่มีประวัติให้ล้าง",
+            confirmButtonColor: "var(--primary-color)",
+          });
+          return;
+        }
+
+        Swal.fire({
+          title: "ล้างประวัติทั้งหมด?",
+          text: "ประวัติการคำนวณจะถูกลบถาวร",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonText: "ล้างเลย",
+          cancelButtonText: "ยกเลิก",
+          confirmButtonColor: "var(--primary-color)",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            calculationHistory = [];
+            document.getElementById("historyContainer").innerHTML =
+              '<div class="text-center text-muted" id="emptyHistory">ไม่มีประวัติการคำนวณ</div>';
+            Swal.fire({
+              icon: "success",
+              title: "ล้างเรียบร้อย!",
+              confirmButtonColor: "var(--primary-color)",
+            });
+          }
+        });
+      }
+
+      function updateHistoryDisplay() {
+        const historyContainer = document.getElementById("historyContainer");
+        const emptyHistory = document.getElementById("emptyHistory");
+
+        if (calculationHistory.length === 0) {
+          emptyHistory.style.display = "block";
+          return;
+        }
+
+        emptyHistory.style.display = "none";
+
+        // Clear existing history items
+        const existingItems =
+          historyContainer.querySelectorAll(".history-item");
+        existingItems.forEach((item) => item.remove());
+
+        // Add history items
+        calculationHistory.forEach((item, index) => {
+          const historyItem = document.createElement("div");
+          historyItem.className = "history-item";
+          historyItem.innerHTML = `
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="history-expression">${item.expression}</div>
+                        <div class="history-result">${item.result}</div>
+                    </div>
+                `;
+
+          historyItem.addEventListener("click", () => {
+            currentInput = item.result;
+            updateDisplay();
+
+            // Show feedback
+            historyItem.style.backgroundColor = "var(--primary-color)";
+            historyItem.style.color = "white";
+            setTimeout(() => {
+              historyItem.style.backgroundColor = "";
+              historyItem.style.color = "";
+            }, 300);
+          });
+
+          historyContainer.appendChild(historyItem);
+        });
+      }
+
+      // Copy functionality
+      document
+        .getElementById("copyResult")
+        .addEventListener("click", function () {
+          if (currentInput !== "Error" && currentInput !== "0") {
+            navigator.clipboard
+              .writeText(currentInput)
+              .then(() => {
+                Swal.fire({
+                  icon: "success",
+                  title: "คัดลอกแล้ว",
+                  text: "ผลลัพธ์ถูกคัดลอกไปยังคลิปบอร์ดแล้ว",
+                  confirmButtonColor: "var(--primary-color)",
+                  timer: 1500,
+                  showConfirmButton: false,
+                });
+              })
+              .catch((err) => {
+                Swal.fire({
+                  icon: "error",
+                  title: "เกิดข้อผิดพลาด",
+                  text: "ไม่สามารถคัดลอกได้",
+                  confirmButtonColor: "var(--primary-color)",
+                });
+              });
+          }
+        });
+
+      // ฟังก์ชันบันทึกการตั้งค่าลงใน LocalStorage
+      function saveSettingsToLocalStorage() {
+        const settings = {
+          fontSize: fontSizeSlider.value,
+          fontFamily: selectedFont,
+          primaryColor: colorPicker.value,
+          orientation: document.querySelector(
+            'input[name="orientation"]:checked'
+          ).value,
+          darkTheme: document.getElementById("theme-toggle").checked,
+        };
+
+        localStorage.setItem("calculatorSettings", JSON.stringify(settings));
+
+        // แสดงข้อความบันทึกสำเร็จ
+        Swal.fire({
+          icon: "success",
+          title: "บันทึกสำเร็จ",
+          text: "การตั้งค่าของคุณได้รับการบันทึกแล้ว",
+          confirmButtonColor: "var(--primary-color)",
+          timer: 1500,
+          showConfirmButton: false,
+        });
+      }
+
+      // ฟังก์ชันโหลดการตั้งค่าจาก LocalStorage
+      function loadSettingsFromLocalStorage() {
+        const savedSettings = localStorage.getItem("calculatorSettings");
+        return savedSettings ? JSON.parse(savedSettings) : null;
+      }
+
+      // ฟังก์ชันนำการตั้งค่าที่บันทึกไว้มาใช้
+      function applySavedSettings(settings) {
+        if (!settings) return;
+
+        // นำค่าการตั้งค่ามาใช้
+        fontSizeSlider.value = settings.fontSize;
+        fontSizeValue.textContent = settings.fontSize;
+        document.documentElement.style.setProperty(
+          "--font-size",
+          `${settings.fontSize}px`
+        );
+
+        selectedFont = settings.fontFamily;
+        document.body.className = document.body.className.replace(
+          /\bfont-\w+\b/g,
+          ""
+        );
+        document.body.classList.add(`font-${selectedFont}`);
+
+        colorPicker.value = settings.primaryColor;
+        colorPreview.style.backgroundColor = settings.primaryColor;
+        document.documentElement.style.setProperty(
+          "--primary-color",
+          settings.primaryColor
+        );
+
+        document.querySelector(
+          `input[name="orientation"][value="${settings.orientation}"]`
+        ).checked = true;
+        if (settings.orientation === "landscape") {
+          document.body.classList.add("orientation-landscape");
+        } else {
+          document.body.classList.remove("orientation-landscape");
+        }
+
+        document.getElementById("theme-toggle").checked = settings.darkTheme;
+        if (settings.darkTheme) {
+          document.body.classList.add("dark-theme");
+        } else {
+          document.body.classList.remove("dark-theme");
+        }
+
+        // อัพเดท dropdown font
+        const currentOption = document.querySelector(
+          `.font-option-item[data-font="${selectedFont}"]`
+        );
+        if (currentOption) {
+          fontOptions.forEach((opt) => opt.classList.remove("active"));
+          currentOption.classList.add("active");
+          const fontName = currentOption
+            .querySelector("span")
+            .textContent.split(" - ")[0];
+          fontPreview.textContent = fontName;
+        }
+      }
+
+      // Settings functionality
+      const fontSizeSlider = document.getElementById("fontSizeSlider");
+      const fontSizeValue = document.querySelector(".font-size-value");
+      const fontDropdown = document.getElementById("fontDropdown");
+      const fontPreview = document.querySelector(".font-preview");
+      const fontOptions = document.querySelectorAll(".font-option-item");
+      const colorPicker = document.getElementById("colorPicker");
+      const colorPreview = document.getElementById("colorPreview");
+      const themeToggle = document.getElementById("theme-toggle");
+
+      // Update font size display when slider changes
+      fontSizeSlider.addEventListener("input", function () {
+        fontSizeValue.textContent = this.value;
+      });
+
+      // Font dropdown functionality - change font immediately
+      fontOptions.forEach((option) => {
+        option.addEventListener("click", function (e) {
+          e.preventDefault();
+
+          // Remove active class from all options
+          fontOptions.forEach((opt) => {
+            opt.classList.remove("active");
+          });
+
+          // Add active class to selected option
+          this.classList.add("active");
+
+          // Update dropdown button text
+          const fontName =
+            this.querySelector("span").textContent.split(" - ")[0];
+          fontPreview.textContent = fontName;
+
+          // Store selected font and apply immediately
+          selectedFont = this.getAttribute("data-font");
+          document.body.className = document.body.className.replace(
+            /\bfont-\w+\b/g,
+            ""
+          );
+          document.body.classList.add(`font-${selectedFont}`);
+        });
+      });
+
+      // Color picker functionality - change color immediately
+      colorPicker.addEventListener("input", function () {
+        const selectedColor = this.value;
+        colorPreview.style.backgroundColor = selectedColor;
+
+        // Convert hex to rgb for CSS variable
+        document.documentElement.style.setProperty(
+          "--primary-color",
+          selectedColor
+        );
+      });
+
+      // Theme toggle functionality
+      themeToggle.addEventListener("change", function () {
+        if (this.checked) {
+          document.body.classList.add("dark-theme");
+        } else {
+          document.body.classList.remove("dark-theme");
+        }
+      });
+
+      // Save settings
+      document
+        .getElementById("saveSettings")
+        .addEventListener("click", function () {
+          // Apply font size
+          const fontSize = fontSizeSlider.value;
+          document.documentElement.style.setProperty(
+            "--font-size",
+            `${fontSize}px`
+          );
+
+          // Apply orientation
+          const orientation = document.querySelector(
+            'input[name="orientation"]:checked'
+          ).value;
+          if (orientation === "landscape") {
+            document.body.classList.add("orientation-landscape");
+          } else {
+            document.body.classList.remove("orientation-landscape");
+          }
+
+          // Apply dark/light theme
+          if (themeToggle.checked) {
+            document.body.classList.add("dark-theme");
+          } else {
+            document.body.classList.remove("dark-theme");
+          }
+
+          // บันทึกการตั้งค่าลงใน LocalStorage
+          saveSettingsToLocalStorage();
+
+          // Close modal
+          const modal = bootstrap.Modal.getInstance(
+            document.getElementById("settingsModal")
+          );
+          modal.hide();
+        });
+
+      // Initialize modal events
+      const settingsModal = document.getElementById("settingsModal");
+      settingsModal.addEventListener("show.bs.modal", function () {
+        // Set current font in dropdown
+        const currentFontClass = Array.from(document.body.classList).find(
+          (cls) => cls.startsWith("font-")
+        );
+        if (currentFontClass) {
+          const currentFont = currentFontClass.replace("font-", "");
+          selectedFont = currentFont;
+
+          // Update dropdown display
+          const currentOption = document.querySelector(
+            `.font-option-item[data-font="${currentFont}"]`
+          );
+          if (currentOption) {
+            fontOptions.forEach((opt) => opt.classList.remove("active"));
+            currentOption.classList.add("active");
+            const fontName = currentOption
+              .querySelector("span")
+              .textContent.split(" - ")[0];
+            fontPreview.textContent = fontName;
+          }
+        }
+
+        // Set current font size
+        const currentFontSize = getComputedStyle(
+          document.documentElement
+        ).getPropertyValue("--font-size");
+        if (currentFontSize) {
+          const sizeValue = parseInt(currentFontSize);
+          fontSizeSlider.value = sizeValue;
+          fontSizeValue.textContent = sizeValue;
+        }
+
+        // Set current theme
+        themeToggle.checked = document.body.classList.contains("dark-theme");
+
+        // Set current orientation
+        const isLandscape = document.body.classList.contains(
+          "orientation-landscape"
+        );
+        document.getElementById(
+          isLandscape ? "landscape" : "portrait"
+        ).checked = true;
+
+        // Set current color in color picker
+        const currentColor = getComputedStyle(document.documentElement)
+          .getPropertyValue("--primary-color")
+          .trim();
+        colorPicker.value = rgbToHex(currentColor);
+        colorPreview.style.backgroundColor = currentColor;
+      });
+
+      // Helper function to convert RGB to Hex
+      function rgbToHex(rgb) {
+        // If already hex, return as is
+        if (rgb.startsWith("#")) return rgb;
+
+        // Extract RGB values
+        const match = rgb.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+        if (match) {
+          const r = parseInt(match[1]);
+          const g = parseInt(match[2]);
+          const b = parseInt(match[3]);
+          return (
+            "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)
+          );
+        }
+        return "#4da6ff"; // Default color
+      }
+
+      // Keyboard support
+      document.addEventListener("keydown", function (event) {
+        const key = event.key;
+
+        if (/[0-9]/.test(key)) {
+          appendToDisplay(key);
+        } else if (key === "+" || key === "-" || key === "*" || key === "/") {
+          appendToDisplay(key === "*" ? "×" : key);
+        } else if (key === ".") {
+          appendToDisplay(".");
+        } else if (key === "Enter" || key === "=") {
+          calculateResult();
+        } else if (key === "Escape" || key === "c" || key === "C") {
+          clearDisplay();
+        } else if (key === "Backspace") {
+          deleteLast();
+        } else if (key === "%") {
+          appendToDisplay("%");
+        }
+      });
+
+      // โหลดการตั้งค่าเมื่อหน้าเว็บโหลดเสร็จ
+      document.addEventListener("DOMContentLoaded", function () {
+        const savedSettings = loadSettingsFromLocalStorage();
+        if (savedSettings) {
+          applySavedSettings(savedSettings);
+        }
+      });
+
+      // Initialize display and history
+      updateDisplay();
+      updateHistoryDisplay();
+    </script>
+  </body>
+</html>
